@@ -1,8 +1,10 @@
+# NOTE: An on-site instance of etcd to carry on LB's configuration
 etcd:
   image: kontena/etcd:2.3.3
   command: --listen-client-urls http://172.17.0.1:2379,http://localhost:2379 --advertise-client-urls http://172.17.0.1:2379,http://localhost:2379
   net: host
 
+# NOTE: An instance of LB, that is intended for SSL/TLS validations
 lb:
   build: .
   command: -log-level=debug
@@ -168,6 +170,7 @@ lb:
     - service-b
     - service-c
 
+# NOTE: An instance of LB, that is intended for a few edge cases validations.
 lb_no_health:
   build: .
   command: -log-level=debug
@@ -176,17 +179,30 @@ lb_no_health:
   environment:
     - KONTENA_SERVICE_NAME=lb_no_health
 
+# NOTE: A 'service-a' instance of the test server
 service-a:
   build: test/server
   container_name: service-a
   hostname: service-a
 
+# NOTE: A 'service-b' instance of the test server
 service-b:
   build: test/server
   container_name: service-b
   hostname: service-b
 
+# NOTE: A 'service-c' instance of the test server
 service-c:
   build: test/server
   container_name: service-c
   hostname: service-c
+
+# NOTE: An instance of the test helper, used to execute curl requests
+lbe:
+  image: lbtesthelper
+  command: sleep 1d # Keeps container running
+  volumes:
+    - $PWD/test:/test
+  links:
+    - lb:test-1
+    - lb:localhost

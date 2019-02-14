@@ -13,7 +13,7 @@ setup() {
 @test "returns health check page if configured in env" {
   etcdctl set /kontena/haproxy/lb/services/service-a/virtual_hosts www.foo.com
   sleep 1
-  run curl -s http://localhost:8180/health
+  run lbe curl -s http://localhost/health
   [ $(expr "$output" : ".*Everything seems to be 200 - OK.*") -ne 0 ]
 }
 
@@ -29,7 +29,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-a/health_check_uri /health
   etcdctl set /kontena/haproxy/lb/services/service-a/upstreams/server service-a:9292
   sleep 1
-  run curl -k -s https://localhost:8443/a/
+  run lbe curl -k -s https://localhost/a/
   [ "${lines[0]}" = "service-a" ]
 
   run config
@@ -44,7 +44,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-a/health_check_port 9292
   etcdctl set /kontena/haproxy/lb/services/service-a/upstreams/server service-a:9292
   sleep 1
-  run curl -k -s https://localhost:8443/a/
+  run lbe curl -k -s https://localhost/a/
   [ "${lines[0]}" = "service-a" ]
 
   run config
