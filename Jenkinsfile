@@ -1,9 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage('build') {
+    stage('Prepare') {
       steps {
-          sh 'uname'
+          sh 'docker-compose --version'
       }
     }
   }
