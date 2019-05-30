@@ -4,7 +4,7 @@
 # In this case, if `test` folder exists, `make test` will still be run.
 .PHONY: test build
 build:
-	@export COMPOSE_FILE=docker-compose.test.yml && docker-compose build
+	@docker-compose -f docker-compose.test.yml build
 test:
 	@docker-compose -f docker-compose.test.yml up -d
 	@bats test/
