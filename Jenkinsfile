@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
-          sh 'docker-compose --version'
+          sh './prepare_test.sh'
       }
     }
   }
