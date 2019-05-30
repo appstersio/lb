@@ -1,9 +1,10 @@
 pipeline {
-    stages {
-        stage('build') {
-            steps {
-                sh 'uname'
-            }
-        }
+  agent { }
+  stages {
+    stage('build') {
+      steps {
+          sh 'uname'
+      }
     }
+  }
 }
