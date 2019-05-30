@@ -1,9 +1,9 @@
 pipeline {
   agent any
   stages {
-    stage('Prepare') {
+    stage('Build Containers') {
       steps {
-          sh './prepare_test.sh'
+          sh 'make build'
       }
     }
   }
