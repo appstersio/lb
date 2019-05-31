@@ -6,13 +6,19 @@ pipeline {
   }
 
   stages {
-    stage('Build Containers') {
+    stage('make build') {
       steps { sh 'make build' }
     }
-    stage('Test Services') {
+    stage('make up') {
+      steps { sh 'make up' }
+    }
+    stage('make netcat') {
+      steps { sh 'make netcat' }
+    }
+    stage('make test') {
       steps { sh 'make test' }
     }
-    stage('Teardown Containers') {
+    stage('make teardown') {
       steps { sh 'make teardown' }
     }
   }
