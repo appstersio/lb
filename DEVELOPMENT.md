@@ -85,3 +85,12 @@ To re-build images and containers issue:
 ```
 $ docker-compose -f docker-compose.test.yml up --build -d
 ```
+
+## Generating test SSL certificates
+Use the following snippet to generate test SSL certificates (customize CN as needed):
+```
+openssl req -x509 -nodes -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -subj "/CN=lb" -config ../ssl.conf -extensions v3_req
+```
+These are the links that helped to find it out:
+ - http://openssl.cs.utah.edu/docs/apps/x509v3_config.html
+ - https://superuser.com/questions/947061/openssl-unable-to-find-distinguished-name-in-config

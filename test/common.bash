@@ -1,20 +1,15 @@
 #!/bin/bash
-export COMPOSE_FILE=docker-compose.test.yml
 
-etcdctl() {
-	docker run --rm --net=host --entrypoint=/usr/bin/etcdctl lbtesthelper "$@"
-}
-curl() {
-	docker run --rm --net=host -v $BATS_TEST_DIRNAME:/test --entrypoint=/usr/bin/curl lbtesthelper "$@"
-}
+# etcdctl manual: https://github.com/etcd-io/etcd/tree/master/etcdctl#etcdctl
+# BASH Guide: 9.1 Internal Variables (http://tldp.org/LDP/abs/html/internalvariables.html)
+
 config() {
-	docker-compose exec lb cat /etc/haproxy/haproxy.cfg
+  # Find out more here: https://www.computerhope.com/unix/nc.htm
+	printf "cat /etc/haproxy/haproxy.cfg" | nc $1 9999
 }
-sslscan() {
-	docker run --rm --net=host nabz/docker-sslscan "$@"
-}
-lbe() {
-  docker-compose exec lbe $@
+
+ssl_certs() {
+  printf "ls /etc/haproxy/certs" | nc $1 9999
 }
 
 # Some assert helpers, inspired by Dokku: https://github.com/dokku/dokku/blob/master/tests/unit/test_helper.bash
