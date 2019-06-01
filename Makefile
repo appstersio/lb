@@ -28,7 +28,6 @@ netcat:
 
 test:
 	@docker-compose exec -T lbe bats /test && \
-		docker-compose exec -T lbe ls -l /test && \
 		echo "OK: Successfuly passed all the tests for this build of load balancer..."
 
 teardown:

@@ -17,7 +17,7 @@ setup() {
     redirect code 301 location foo.com%[capture.req.uri] if wildcard
   "
 
-  sleep 1
+  sleep 3
   run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://lb/ -o /dev/null
   [ "${lines[0]}" = "301" ]
 
