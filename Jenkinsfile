@@ -23,7 +23,7 @@ pipeline {
     }
     stage('make publish') {
       when {
-        expression { currentBuild.result == 'SUCCESS' }
+        expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
       }
       steps { sh 'make publish' }
     }
