@@ -23,7 +23,8 @@ netcat:
 		echo "OK: Successfuly started netcat listener on load balancer (lb_no_health)..."
 
 test:
-	@docker-compose -f docker-compose.test.yml exec -T lbe bats test/ && \
+	@docker-compose -f docker-compose.test.yml exec -T lbe bats /test && \
+		docker-compose -f docker-compose.test.yml exec -T lbe ls -l /test && \
 		echo "OK: Successfuly passed all the tests for this build of load balancer..."
 
 teardown:
