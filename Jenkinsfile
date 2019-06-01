@@ -9,8 +9,8 @@ pipeline {
     stage('make build') {
       steps { sh 'make build' }
     }
-    stage('make up') {
-      steps { sh 'make up' }
+    stage('make release-up') {
+      steps { sh 'make release-up' }
     }
     stage('make netcat') {
       steps { sh 'make netcat' }

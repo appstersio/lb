@@ -1,0 +1,6 @@
+version: "3.6"
+services:
+  # NOTE: An instance of the test helper, used to execute curl requests
+  lbe:
+    volumes:
+      - "./test:/test:ro"

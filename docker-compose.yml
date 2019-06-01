@@ -207,8 +207,6 @@ services:
       context: ./
       dockerfile: "Dockerfile.testhelper"
     command: sleep 1d # Keeps container running
-    volumes:
-      - "./test:/test:ro"
     links:
       - etcd
       - lb:test-1
