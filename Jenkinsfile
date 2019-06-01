@@ -21,5 +21,11 @@ pipeline {
     stage('make teardown') {
       steps { sh 'make teardown' }
     }
+    stage('make publish') {
+      when {
+        expression { currentBuild.result == 'SUCCESS' }
+      }
+      steps { sh 'make publish' }
+    }
   }
 }
