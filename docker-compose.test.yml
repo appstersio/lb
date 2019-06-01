@@ -208,7 +208,7 @@ services:
       dockerfile: "Dockerfile.testhelper"
     command: sleep 1d # Keeps container running
     volumes:
-      - "$PWD/test:/test:ro"
+      - "./test:/test:ro"
     links:
       - etcd
       - lb:test-1
