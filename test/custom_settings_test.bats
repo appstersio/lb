@@ -4,7 +4,7 @@ load "common"
 
 @test "supports custom common settings via env" {
 
-  run config
+  run config lb
   assert_output_contains "option dontlognull"
 
 }

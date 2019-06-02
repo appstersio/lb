@@ -12,15 +12,17 @@ setup() {
 
 @test "returns health check page if configured in env" {
   etcdctl set /kontena/haproxy/lb/services/service-a/virtual_hosts www.foo.com
+
   sleep 1
-  run lbe curl -s http://localhost/health
+  run curl -s http://lb/health
   [ $(expr "$output" : ".*Everything seems to be 200 - OK.*") -ne 0 ]
 }
 
 @test "returns error if health not configured in env" {
   etcdctl set /kontena/haproxy/lb_no_health/services/service-a/virtual_hosts www.foo.com
+
   sleep 1
-  run curl -s http://localhost:8181/health/
+  run curl -s http://lb_no_health/health/
   [ $(expr "$output" : ".*503 — Service Unavailable.*") -ne 0 ]
 }
 
@@ -28,13 +30,13 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-a/virtual_path /a/
   etcdctl set /kontena/haproxy/lb/services/service-a/health_check_uri /health
   etcdctl set /kontena/haproxy/lb/services/service-a/upstreams/server service-a:9292
-  sleep 1
-  run lbe curl -k -s https://localhost/a/
+
+  sleep 2
+  run curl -k -s https://lb/a/
   [ "${lines[0]}" = "service-a" ]
 
-  run config
+  run config lb
   assert_output_contains "option httpchk GET /health"
-
 }
 
 
@@ -43,12 +45,12 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-a/health_check_uri /health
   etcdctl set /kontena/haproxy/lb/services/service-a/health_check_port 9292
   etcdctl set /kontena/haproxy/lb/services/service-a/upstreams/server service-a:9292
+
   sleep 1
-  run lbe curl -k -s https://localhost/a/
+  run curl -k -s https://lb/a/
   [ "${lines[0]}" = "service-a" ]
 
-  run config
+  run config lb
   assert_output_contains "option httpchk GET /health"
   assert_output_contains "server server service-a:9292 check port 9292"
-
 }

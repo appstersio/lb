@@ -1,5 +1,5 @@
 FROM haproxy:1.9.4-alpine
-MAINTAINER Kontena, Inc. <info@kontena.io>
+MAINTAINER Pavel Tsurbeleu <pavel.tsurbeleu@me.com>
 
 ENV STATS_PASSWORD=secret \
     PATH="/app/bin:${PATH}"
@@ -15,8 +15,14 @@ RUN apk --update add --virtual build-dependencies ruby-dev build-base openssl-de
     cd /app ; bundle install --without development test && \
     apk del build-dependencies
 
-ADD . /app
+ADD bin /app/bin/
+ADD lib /app/lib/
+ADD entrypoint.sh /app/
+ADD README.md /app/
+
+
 ADD errors/* /etc/haproxy/errors/
+
 EXPOSE 80 443
 WORKDIR /app
 

@@ -14,9 +14,9 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-b/virtual_hosts www.foo.com,api.foo.com
   etcdctl set /kontena/haproxy/lb/services/service-b/upstreams/server service-b:9292
   sleep 1
-  run curl -s -H "Host: www.foo.com" http://localhost:8180/
+  run curl -s -H "Host: www.foo.com" http://lb/
   [ "${lines[0]}" = "service-b" ]
-  run curl -s -H "Host: api.foo.com" http://localhost:8180/
+  run curl -s -H "Host: api.foo.com" http://lb/
   [ "${lines[0]}" = "service-b" ]
 }
 
@@ -26,11 +26,11 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-c/virtual_hosts www.bar.com
   etcdctl set /kontena/haproxy/lb/services/service-c/upstreams/server service-c:9292
   sleep 1
-  run curl -s -H "Host: www.foo.com" http://localhost:8180/
+  run curl -s -H "Host: www.foo.com" http://lb/
   [ "${lines[0]}" = "service-b" ]
-  run curl -s -H "Host: api.foo.com" http://localhost:8180/
+  run curl -s -H "Host: api.foo.com" http://lb/
   [ "${lines[0]}" = "service-b" ]
-  run curl -s -H "Host: www.bar.com" http://localhost:8180/
+  run curl -s -H "Host: www.bar.com" http://lb/
   [ "${lines[0]}" = "service-c" ]
 }
 
@@ -43,19 +43,19 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-c/upstreams/server service-c:9292
 
   sleep 1
-  run curl -s http://localhost:8180
+  run curl -s http://lb
   [ "$status" -eq 0 ]
   [ $(expr "$output" : ".*Service Unavailable.*") -ne 0 ]
 
-  run curl -s http://localhost:8180/b
+  run curl -s http://lb/b
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-b" ]
 
-  run curl -s -H "Host: www.bar.com" http://localhost:8180/c
+  run curl -s -H "Host: www.bar.com" http://lb/c
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-c" ]
 
-  run curl -s -H "Host: api.bar.com" http://localhost:8180/c
+  run curl -s -H "Host: api.bar.com" http://lb/c
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-c" ]
 }
@@ -74,25 +74,25 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-c/upstreams/server service-c:9292
 
   sleep 1
-  run curl -s http://localhost:8180
+  run curl -s http://lb
   [ "$status" -eq 0 ]
   [ $(expr "$output" : ".*Service Unavailable.*") -ne 0 ]
 
-  run curl -s -H "Host: www.foo.com" http://localhost:8180/virtual_path
+  run curl -s -H "Host: www.foo.com" http://lb/virtual_path
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-a" ]
   [ "${lines[1]}" = "/virtual_path" ]
 
-  run curl -s http://localhost:8180/b
+  run curl -s http://lb/b
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-b" ]
   [ "${lines[1]}" = "" ]
 
-  run curl -s -H "Host: www.bar.com" http://localhost:8180/c
+  run curl -s -H "Host: www.bar.com" http://lb/c
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-c" ]
 
-  run curl -s -H "Host: api.bar.com" http://localhost:8180/c
+  run curl -s -H "Host: api.bar.com" http://lb/c
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-c" ]
 }
@@ -104,11 +104,11 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-c/upstreams/server service-c:9292
 
   sleep 1
-  run curl -s -H "Host: www.bar.com" http://localhost:8180
+  run curl -s -H "Host: www.bar.com" http://lb
   [ "$status" -eq 0 ]
   [ $(expr "$output" : ".*Service Unavailable.*") -ne 0 ]
 
-  run curl -s -H "Host: api.bar.com" http://localhost:8180/
+  run curl -s -H "Host: api.bar.com" http://lb/
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-c" ]
 }
@@ -120,12 +120,12 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-c/virtual_hosts www.bar.com
   etcdctl set /kontena/haproxy/lb/services/service-c/upstreams/server service-c:9292
 
-  sleep 1
-  run curl -s http://localhost:8180
+  sleep 2
+  run curl -s http://lb
   [ "$status" -eq 0 ]
   [ $(expr "$output" : ".*Service Unavailable.*") -ne 0 ]
 
-  run curl -s -H "Host: www.bar.com" http://localhost:8180/
+  run curl -s -H "Host: www.bar.com" http://lb/
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-b" ]
 }
@@ -142,15 +142,15 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-c/upstreams/server service-c:9292
 
   sleep 1
-  run curl -s http://localhost:8180
+  run curl -s http://lb
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-a" ]
 
-  run curl -s -H "Host: www.bar.com" http://localhost:8180/
+  run curl -s -H "Host: www.bar.com" http://lb/
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-b" ]
 
-  run curl -s -H "Host: api.bar.com" http://localhost:8180/c
+  run curl -s -H "Host: api.bar.com" http://lb/c
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-c" ]
 }
@@ -161,11 +161,11 @@ setup() {
 
   sleep 1
 
-  run curl -s -H "Host: www.bar.com" http://localhost:8180/
+  run curl -s -H "Host: www.bar.com" http://lb/
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-b" ]
 
-  run curl -s -H "Host: www.bar.com:80" http://localhost:8180/
+  run curl -s -H "Host: www.bar.com:80" http://lb/
   [ "$status" -eq 0 ]
   [ "${lines[0]}" = "service-b" ]
 }

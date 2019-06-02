@@ -13,9 +13,9 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-a/upstreams/server service-a:9292
 
   sleep 1
-  run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://localhost:8180/ -o /dev/null
+  run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://lb/ -o /dev/null
   [ "${lines[0]}" = "503" ]
 
-  run config
+  run config lb
   assert_output_contains "use_backend service-b" 1
 }

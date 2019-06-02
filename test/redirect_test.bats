@@ -16,17 +16,18 @@ setup() {
     acl wildcard hdr_reg(host) ^\w*\.foo.com\w*
     redirect code 301 location foo.com%[capture.req.uri] if wildcard
   "
-  sleep 1
-  run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://localhost:8180/ -o /dev/null
+
+  sleep 3
+  run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://lb/ -o /dev/null
   [ "${lines[0]}" = "301" ]
 
-  run curl -sL -w "%{http_code}" -H "Host: bar.foo.com" http://localhost:8180/ -o /dev/null
+  run curl -sL -w "%{http_code}" -H "Host: bar.foo.com" http://lb/ -o /dev/null
   [ "${lines[0]}" = "301" ]
 
 
-  run curl -ksL -w "%{http_code}" -H "Host: www.foo.com" https://localhost:8443/ -o /dev/null
+  run curl -ksL -w "%{http_code}" -H "Host: www.foo.com" https://lb/ -o /dev/null
   [ "${lines[0]}" = "301" ]
   
-  run curl -sL -w "%{http_code}" -H "Host: foo.bar.foo.com" http://localhost:8180/
+  run curl -sL -w "%{http_code}" -H "Host: foo.bar.foo.com" http://lb/
   [ "${lines[0]}" = "service-b200" ]
 }
