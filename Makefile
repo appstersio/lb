@@ -35,6 +35,6 @@ teardown:
 		echo "OK: Successfuly shutdown and removed all the required components..."
 
 publish:
-	@docker login -u="$(kontena vault read --value DOCKER_USERNAME)" -p="$(kontena vault read --value DOCKER_PASSWORD)" && \
+	@docker login -u="$$(kontena vault read --value DOCKER_USERNAME)" -p="$$(kontena vault read --value DOCKER_PASSWORD)" && \
 		docker-compose push lb && \
 		echo "OK: Successfuly published 'lb' image..."
