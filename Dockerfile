@@ -1,4 +1,4 @@
-FROM haproxy:1.9.4-alpine
+FROM haproxy:1.9.8-alpine
 LABEL maintainer="Pavel Tsurbeleu <pavel.tsurbeleu@me.com>"
 
 ENV STATS_PASSWORD=secret \
