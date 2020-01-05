@@ -11,7 +11,7 @@ module Kontena::Actors
     # @param [String] config_file
     def initialize(haproxy_bin = '/usr/local/sbin/haproxy', config_file = '/etc/haproxy/haproxy.cfg')
       @current_pid = nil
-      @haproxy_cmd = [haproxy_bin, '-f', config_file, '-db', '-V']
+      @haproxy_cmd = [haproxy_bin, '-f', config_file, '-db', '-d']
       @validate_cmd = [haproxy_bin, '-c -f', config_file]
     end
 
