@@ -197,7 +197,7 @@ services:
 
   # NOTE: An instance of the test helper, used to execute curl requests
   lbe:
-    image: krates/toolbox:2.4.9-4
+    image: krates/toolbox:2.4.9-5
     command: -c "./build/test.sh"
     working_dir: /lbe
     volumes:
