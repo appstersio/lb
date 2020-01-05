@@ -1,4 +1,5 @@
 #!/bin/bash
+echo
 
 echo ":: BUNDLE ::"
 bundle install
@@ -6,10 +7,6 @@ echo
 
 echo ":: RSPEC ::"
 rspec spec/
-echo
-
-echo ":: PREPARE ::"
-./prepare_test.sh
 echo
 
 # Skip running all the tests when we're in tracing mode

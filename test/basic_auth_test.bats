@@ -2,18 +2,16 @@
 
 load "common"
 
-
 setup() {
   etcdctl rm --recursive /kontena/haproxy/lb/services/service-b || true
 }
-
 
 @test "basic auth gives 401 without user and password" {
   etcdctl set /kontena/haproxy/lb/services/service-b/virtual_hosts www.foo.com
   etcdctl set /kontena/haproxy/lb/services/service-b/upstreams/server service-b:9292
   etcdctl set /kontena/haproxy/lb/services/service-b/basic_auth_secrets "user admin insecure-password passwd"
   sleep 1
-  run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://localhost:8180/ -o /dev/null
+  run curl -sL -w "%{http_code}" -H "Host: www.foo.com" http://lb/ -o /dev/null
   [ "${lines[0]}" = "401" ]
 
 }
@@ -24,7 +22,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-b/upstreams/server service-b:9292
   etcdctl set /kontena/haproxy/lb/services/service-b/basic_auth_secrets "user admin insecure-password passwd"
   sleep 1
-  run curl -s -H "Host: www.foo.com" http://admin:passwd@localhost:8180/
+  run curl -s -H "Host: www.foo.com" http://admin:passwd@lb/
   [ "${lines[0]}" = "service-b" ]
 
 }
@@ -37,7 +35,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-b/basic_auth_secrets "user admin password $PASSWD"
   sleep 1
 
-  run curl -s -H "Host: www.foo.com" http://admin:passwd@localhost:8180/
+  run curl -s -H "Host: www.foo.com" http://admin:passwd@lb/
   [ "${lines[0]}" = "service-b" ]
 
 }
