@@ -9,7 +9,7 @@ DOCKER_SOCKET = /var/run/docker.sock:/var/run/docker.sock
 .EXPORT_ALL_VARIABLES:
 COMPOSE_PROJECT_NAME = krlb
 
-.PHONY: test
+.PHONY: test edge build buddy
 
 test: wipe
 	@docker-compose run -T lbe
@@ -20,6 +20,12 @@ trace: wipe
 
 build:
 	@docker-compose build
+
+edge:
+	@docker build --no-cache -t krates/lb:edge .
+
+buddy:
+	@docker build --no-cache -t krates/lb:$$(git rev-parse --short HEAD) .
 
 wipe:
 	@docker ps -aq | xargs -r docker rm -f > /dev/null
