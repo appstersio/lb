@@ -14,8 +14,8 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-b/cookie ""
   etcdctl set /kontena/haproxy/lb/services/service-b/virtual_hosts www.foo.com
   etcdctl set /kontena/haproxy/lb/services/service-b/upstreams/server service-b:9292
-  sleep 1
-  run curl -c - -s -H "Host: www.foo.com" http://localhost:8180/
+  sleep 3
+  run curl -c - -s -H "Host: www.foo.com" http://lb/
 
   [ "${lines[0]}" = "service-b# Netscape HTTP Cookie File" ]
   # cookie in format: www.foo.com FALSE / FALSE 0 KONTENA_SERVERID  server
@@ -29,7 +29,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-b/virtual_hosts www.foo.com
   etcdctl set /kontena/haproxy/lb/services/service-b/upstreams/server service-b:9292
   sleep 1
-  run curl -c - -s -H "Host: www.foo.com" http://localhost:8180/
+  run curl -c - -s -H "Host: www.foo.com" http://lb/
   [ "${lines[0]}" = "service-b# Netscape HTTP Cookie File" ]
   # cookie in format: www.foo.com FALSE / FALSE 0 KONTENA_SERVERID  server
   [ $(expr "${lines[3]}" : ".*LB_COOKIE_TEST.*") -ne 0 ]
@@ -42,7 +42,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb/services/service-b/virtual_hosts www.foo.com
   etcdctl set /kontena/haproxy/lb/services/service-b/upstreams/server-1 service-b:9292
   sleep 1
-  run curl -c - -s -H "Host: www.foo.com" http://localhost:8180/cookie
+  run curl -c - -s -H "Host: www.foo.com" http://lb/cookie
   [ "${lines[0]}" = "service-b" ]
   # cookie in format: www.foo.com FALSE / FALSE 0 KONTENA_SERVERID  server
   [ $(expr "${lines[4]}" : ".*JSESSIONID.*") -ne 0 ]

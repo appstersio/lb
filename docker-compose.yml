@@ -1,0 +1,214 @@
+version: "3.6"
+# NOTE: An on-site instance of etcd to carry on LB's configuration
+services:
+  etcd:
+    image: kontena/etcd:2.3.3
+    command: --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://etcd:2379
+
+  # NOTE: An instance of LB, that is intended for SSL/TLS validations
+  lb:
+    build: .
+    command: -log-level=debug
+    environment:
+      ETCD_NODE: "etcd"
+      KONTENA_SERVICE_NAME: "lb"
+      KONTENA_LB_HEALTH_URI: "/health"
+      KONTENA_LB_SSL_CIPHERS: ECDHE-RSA-AES128-GCM-SHA256
+      KONTENA_LB_CUSTOM_SETTINGS: |
+        option dontlognull
+      KONTENA_LB_GLOBAL_SETTINGS: |
+        ssl-default-bind-options force-tlsv12
+      ACME_CHALLENGE_LoqXcYV8q5ONbJQxbmR7SCTNo3tiAXDfowyjxAjEuX0: |
+        LoqXcYV8q5ONbJQxbmR7SCTNo3tiAXDfowyjxAjEuX0.9jg46WB3rR_AHD-EBXdN7cBkH1WOu0tA3M9fm21mqTI
+
+      SSL_CERT_test1: |
+        -----BEGIN CERTIFICATE-----
+        MIIC9TCCAd2gAwIBAgIJAK94fUzfHt1pMA0GCSqGSIb3DQEBCwUAMBExDzANBgNV
+        BAMMBnRlc3QtMTAeFw0xNzEwMjYxMDA5MDNaFw0yMDA3MjIxMDA5MDNaMBExDzAN
+        BgNVBAMMBnRlc3QtMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMP9
+        6ym6ptYHFh0o2aoGqTUL+Di+BYNMTDA2CciHtMPL7/SqdtS8Dej0hguyiee37D07
+        b+Lo9I4/wBYVtCIUrDqqQvYwkAsUbZKD+nXWalfpSGtt3iFT4nVCg833yK6b6/JN
+        TqpMmruMjn9sadzEAxabHU9at/j9ZCLrQBdgrGRhGJcCgPSc3jTLAEz5gf45F3DO
+        vD/4aZYCsjS2qFHvtzFBP8pVqRP9CiXvCw/tuwN7wA7wBeJ185JPax8FfSELaDbZ
+        Yd63GEVVCmM87HS8faCCbffmaciPoHPl8TyM3+FaGSot3HT6VLnkVFeQR470nKxT
+        0PX/iSD++b05l8GGjKECAwEAAaNQME4wHQYDVR0OBBYEFLJn8DEv3K4ISyzh8Du5
+        GnOeT6WIMB8GA1UdIwQYMBaAFLJn8DEv3K4ISyzh8Du5GnOeT6WIMAwGA1UdEwQF
+        MAMBAf8wDQYJKoZIhvcNAQELBQADggEBAL/KI42JqasFCofB+ii4L6qodHohhaw1
+        tso6YQTSwvwYDG/tmjUdIRB3W2Vi4eUUHjhH0/CJk/jZaTOpQrC/Kd89gcQr+UzM
+        uXx2bDGMp6VszE9wFPBpczoPndmc9ExPijbtOD4Q5NRpOgxs55JoVLyOEijvSfEn
+        dQetBiLeudiYkQT89APysveqkj2WojK6H3Obvns9bZ5HlnGcWP71ttY1/HyIMd1P
+        2d10zFA66rriEwlcsOTKuusJ0y2OUOA6Fzi3v1vInDvx21QzLX3NMUtqn3t5qtto
+        UQCkJrk2TE6mrL92igBV/+ckB5cGvJ5L8viyvijezX3xjOzn9JGhFhA=
+        -----END CERTIFICATE-----
+        -----BEGIN PRIVATE KEY-----
+        MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDD/espuqbWBxYd
+        KNmqBqk1C/g4vgWDTEwwNgnIh7TDy+/0qnbUvA3o9IYLsonnt+w9O2/i6PSOP8AW
+        FbQiFKw6qkL2MJALFG2Sg/p11mpX6Uhrbd4hU+J1QoPN98ium+vyTU6qTJq7jI5/
+        bGncxAMWmx1PWrf4/WQi60AXYKxkYRiXAoD0nN40ywBM+YH+ORdwzrw/+GmWArI0
+        tqhR77cxQT/KVakT/Qol7wsP7bsDe8AO8AXidfOST2sfBX0hC2g22WHetxhFVQpj
+        POx0vH2ggm335mnIj6Bz5fE8jN/hWhkqLdx0+lS55FRXkEeO9JysU9D1/4kg/vm9
+        OZfBhoyhAgMBAAECggEBAIm3y93npUHxes2EneZGhfGbdpFQnQkUvNiHsDozeYa3
+        r+YpPhTgC5os8GAZ1aN4bszcDhPRA79M9onOOGRWSGt0plbd6umOMixpBr50qwcZ
+        CmVKr3KVwiQJWBqLyX1AXPxG7EboSzYMXzkUkhKpvU3OMztGkM2qKAoNalzC9oAV
+        KdxTp52bG2iekBNj1b839jl57eRmJsGcAcRXMtxblvak84LEfPhnXSUp0nhhTHD2
+        Dr+jvxF+q8TbIyf+StKppi3KmHliSr1qqLKC3+9qsHRCw0REnqOTJ04QHjo3QjUU
+        3Rlpal/b9yFyxT5o9+doQKKU7EISRwERfn2POLOO+pECgYEA916+BKBF8jq4Yghu
+        G+b/zEZpeVeRYbPnxCgqrqI83+tistMbJxI1cHch7VLl6hVngD+U4BOnXRUGwHmG
+        UxH7mzurX7ULJfoTSpN+4yMsd9kuBvlzoqgzaxg6Cl1adRQJUcaf1Ki3DN7ToFMU
+        WRQdFNaVrEvEA5VefPeAk+utMLUCgYEAytRRhDMafqpFzVj/LSvYDVuMQCHMqRpJ
+        S71HyW+qunyhzlYSUqk9IHWLDIET0bIZhVa4yThvnv3nekJ+OGPsci1Yi3uOziJK
+        Oedv+UMu83p/Lo7pgMlfjj8EjOtAd9d3Sn35YIH8hQDF2iyCFABaVFCFwMkVEE8A
+        rZu8naT8m70CgYEAz5kbLxaynM7a3qrkfVYnZm/RJJxwzeYFo4FyEIznOaR5eEni
+        h6+oWXIhbuIbQZAlBGRXtJXJ5zw2JmHWcPCuj2BMOk3dxUlR10xhOI3US+Bf2EqQ
+        2Pj/7eivDPO7bnYaPB7NE9Nji9GVGP+gHAHdRhewFKChJ8C7Q3US2xD2j+ECgYEA
+        k/aZVOh23opWi3vuA0TlwrDTOoGtrHrpl2AIe3GDybFb1ItDqJufZQt6mW+cRrA3
+        H+dovBn4i7LL54uUSozSk2RzIKXNQqEPJvin3d3d5W6qUwucWgANPlbIegiwKfy8
+        IFKP1pBc56Xtr8AiUHcFblajjETkodYQN5XR3erbAL0CgYEA6KfaCQkIe3NbTN6H
+        o1hmwFgF2p4gjM202GwR6A4f4uvgrmnd76YDTmZidFbGfFw5igB3Gfisjd9nthtZ
+        +NUq8hr7lx+ZJ413LyF/9CQAQn1l5BuIpcDGDirm8od4nZvg53qN1Q8AqEzZFcMw
+        IJepvjbc/iTWfYqrWuod1wcBU5A=
+        -----END PRIVATE KEY-----
+      SSL_CERTS: |
+        -----BEGIN CERTIFICATE-----
+        MIIC7TCCAdWgAwIBAgIJAIMwKYy23ftfMA0GCSqGSIb3DQEBCwUAMA0xCzAJBgNV
+        BAMMAmxiMB4XDTE5MDUzMTE2NTMwMFoXDTIwMDUzMDE2NTMwMFowDTELMAkGA1UE
+        AwwCbGIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC6h0nJLiMjiC9i
+        D0UiewV/qpMAlMd9lzKRJwYAPw95674BlnqvofJwwxpTOHUt3ATsqpH09MXEtLKq
+        jPIAOGMBogCYPMDF7xI3/PjPTPQiEzaf4LuxG9ybBDJYaOTc195ToaL4NpMUfPm4
+        7GpvgN4bfz72IajUsM2F9LhaCsJQVhug38fGLFLbXJzYe2CX7z0bmdIg2D9vXLt6
+        U6S+uvnuDVuaC+64qmhdUdRVMzHzf3pNorrqKYfpxVu6aW7HLt1cwv2YTyXboPWc
+        xOR1FuEsAvHA/vj9i2sqfrVsekCLYrUpSFe+1B1QiJKTsr7BOsuMnA5MbwNXBNTw
+        0UcKqvMfAgMBAAGjUDBOMAwGA1UdEwQFMAMBAf8wHQYDVR0OBBYEFKo+PCoSxhL6
+        L6LHMQbmrTnzz65JMB8GA1UdIwQYMBaAFKo+PCoSxhL6L6LHMQbmrTnzz65JMA0G
+        CSqGSIb3DQEBCwUAA4IBAQAVR2T6l5G+HLAIqz1tQnjhZ8KF2g8Qqfd3DW9JNJsI
+        ZwD9K1qD0b75/IgMA+/NI8Y9eau3lZ6jF5WAo04tXJbzuPgiDmO+QA1TqbcXU7LN
+        ++9Jya60chAUO7jQW+y/eZxStkYkB711mx/pvLiFYjgmD3m8Rvx6nXE7hwz54IOX
+        YnwdAkHBOeqvBJMj/3WlHK7Ql3COGp4EHc1D3Wbq8oGRkdmqHHbx8IvLOq1uIweZ
+        TW6xz35HnPloa+UyxnRsvivFtRZgtBNrwRYIEhBCP5n91IaZFDHnPgqPoc9DSzxI
+        GGuAALZZ6w/nILU1P9Xr7S1havc4ioshAktPrMNusi3v
+        -----END CERTIFICATE-----
+        -----BEGIN PRIVATE KEY-----
+        MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6h0nJLiMjiC9i
+        D0UiewV/qpMAlMd9lzKRJwYAPw95674BlnqvofJwwxpTOHUt3ATsqpH09MXEtLKq
+        jPIAOGMBogCYPMDF7xI3/PjPTPQiEzaf4LuxG9ybBDJYaOTc195ToaL4NpMUfPm4
+        7GpvgN4bfz72IajUsM2F9LhaCsJQVhug38fGLFLbXJzYe2CX7z0bmdIg2D9vXLt6
+        U6S+uvnuDVuaC+64qmhdUdRVMzHzf3pNorrqKYfpxVu6aW7HLt1cwv2YTyXboPWc
+        xOR1FuEsAvHA/vj9i2sqfrVsekCLYrUpSFe+1B1QiJKTsr7BOsuMnA5MbwNXBNTw
+        0UcKqvMfAgMBAAECggEAY3BgO6om/XhKmmI9nwYqhkbvG241c5S5VnyRTGxR2dN9
+        dec8/Ii/cLHyRM9iWNJkpa7BJO+gxx716Mo+8TMeRO6SlpY8xsiO094+3nTN6aSI
+        iG8MYHzT/KgeFtfEup8yXS9cbCrb+h4uGxGeJFd1EP+jFyAWm1yuFG3EIex+bsiv
+        79pTmDdiPhYuEgCargBvgMrkOLOatuGtGW/6VovTYKzPdyb9pxn4tXGsaklx+F30
+        bACT5o7NlGOZvNPqrA4S+Y7cHWF3nILXxcSmCIL/ay32KU3LghCTp4mv9k/fwwt1
+        i1/SlSaksVy86cdTgcqUFm7DvOuAYSjaVQsMxW1dEQKBgQDbEfSv3SPAjTrgKLDg
+        0dNIrx3Hc3ZULT/sB2fsNyQerjxvPAlRJ9V0L3uH2bUW0zHkvqIwg94hTRHt1BXi
+        ymJy+pujGkg5mQcYhTmKf34JVRm/256ViXBA693uhDXI+H7tXCaMOIQov+5me5WS
+        LcxTTy0uAM3I/8lo1+RcHG9powKBgQDZ+PxjyZej7IANbotKBEA6dqMh798SrOWx
+        3i8eX/KUZ9YUpx5KwJf+C7uzqkzZpq+HgVY2M3PratopCPFhOczCfTjLdlnjuzva
+        TZoQ5eT9E0rIxRBH52/IRzwtYu1UqPNW2kviFeNwjopFIo+WWBg+Sd5aF2+ZHxTi
+        crfiYi2gVQKBgQDbBR6vXNZLwmdkiQoeG2mzt3B8YhGhowPPhK//2DlCe0xsoYdn
+        Hf4ohPhqH90PDuNJINaizpQckyMjtfCTp2e6MJe9/57KBxazCy82KrTlu7FcwcPR
+        GXGjVq2xs3jajqbHxGO9uRtYalt9Fn25ghRQDk7LOX6EQEcrjP0AomU5JQKBgF7v
+        kv3jT6iV2TAAdapHL7JG+cZOM1pu85wEqYERSRZaI2PbZdYpDAoaEiauhcpGTy01
+        p9bzkgl3AI3e10MBaa1L3PDBG2WUpvztz6yMdK/FN006h1zJ8GXKoOsjqzq0W0f4
+        zBQsdGMRsidqZh+VPvniMnYKvxBx+San0G9JU5YBAoGADcDNZN5QKHN9nOG2aH9t
+        JO5ptNRFSXk2e634daRb1HBJAI+GF88oGufa+RwENElZ77sJeimlCh/XgJWbfw85
+        s0CXCa/ORESwctl0BfIuIXMMXcOAku8bFNmvBZ1gO9rj4mtiF6vHV4Puni8K2gP+
+        nO/L19LVK3vTKhfZueXoLNw=
+        -----END PRIVATE KEY-----
+        -----BEGIN CERTIFICATE-----
+        MIIDQzCCAiugAwIBAgIJAOU1G4gSj6nYMA0GCSqGSIb3DQEBCwUAMDgxCjAIBgNV
+        BAMMASoxHTAbBgNVBAoMFE15IENvbXBhbnkgTmFtZSBMVEQuMQswCQYDVQQGEwJV
+        UzAeFw0xNjA2MDMwNjU2MTdaFw0xOTA1MTkwNjU2MTdaMDgxCjAIBgNVBAMMASox
+        HTAbBgNVBAoMFE15IENvbXBhbnkgTmFtZSBMVEQuMQswCQYDVQQGEwJVUzCCASIw
+        DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAK4TvlMa3/9YK1aLSWBh1QPGulQd
+        aYLoCSDYoTMv0YOO4lLDPBkU6fzjwWX44nesBjUmN61QxBkpGNTs9x6pNvd4YI7N
+        arhxSljROf42vNWkoVKl0Ls3fgUxMAcbFYf38i5PLzVLebsIZR2+sVe6QdwWAame
+        nhlEE1ubnx46xROCTLkjfzLlYdSJBNPx8gKovgf31gWU9dtVrdkBclHmglspXZt0
+        removed_to_invalidate_certs
+        Qi89hSFKjDTFeovydxbaOR3k5PKqOFD1Lou9Ho87TeLBNNYkA16IdJ63dLMCAwEA
+        AaNQME4wHQYDVR0OBBYEFNO0I5ogOcgUbWmaBj1hA8qt7F0rMB8GA1UdIwQYMBaA
+        FNO0I5ogOcgUbWmaBj1hA8qt7F0rMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEL
+        BQADggEBAHpJiP8ZblJmEuSP0lAJRovTPGhKZA4Pgpa9zimETCruBTkTZyCcNwD3
+        htHgrqkCieoV5RK5juyHVQo5GiVptcWxVSuGgr9tKtWTYlfB0xkRRT9No0bjT9J8
+        cGTZm+lZyQ85AuwOPSe1wFUDPuLu8xJVPJoIeDNaKqjZleVZUNafPSKRWhi0X6rt
+        JmwgQdUBqRgZYHL6Zpcr2E5oyc4tL10pYcIQchyDHg0IHyVb/xz072RFRKj0zP4A
+        2wVolufLJCFVbc8g1vEDgRjsuGLN55bJ0CTsn14GcOLsBntqKYyKm6lwV3+dDRM/
+        AacJXcMY+aRv/l5fNl0oMRcZpRr3gew=
+        -----END CERTIFICATE-----
+        -----BEGIN PRIVATE KEY-----
+        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCuE75TGt//WCtW
+        i0lgYdUDxrpUHWmC6Akg2KEzL9GDjuJSwzwZFOn848Fl+OJ3rAY1JjetUMQZKRjU
+        7PceqTb3eGCOzWq4cUpY0Tn+NrzVpKFSpdC7N34FMTAHGxWH9/IuTy81S3m7CGUd
+        vrFXukHcFgGpnp4ZRBNbm58eOsUTgky5I38y5WHUiQTT8fICqL4H99YFlPXbVa3Z
+        AXJR5oJbKV2bdAnWkLO2NbpK72+VsjV1wiZXMr44aQ67dZwdZZ11eWZyjfcrXQ2z
+        f6NxhRlzJg/ItkIvPYUhSow0xXqL8ncW2jkd5OTyqjhQ9S6LvR6PO03iwTTWJANe
+        iHSet3SzAgMBAAECggEBAIo8y4ubb/6Kuf/EJMURa+PP0PAzWzLFqVoYLgtEEhFz
+        Sm+G8xbH8PkOtOqRtuZqCZPzgYt09AU3Ca0tcSE8J5ZmVeeRYQqPjQbzQCaMuXC/
+        iAzl+NhzvPPKl+VMsNCFKiF0aHzeLxFEHWh9or+T/fEU2MUmXU6bLPQ2pSmQaiiO
+        pEDH0d5xuWP90LgfPJoKcBlai140Ml+gLTnTfBIElQg06TiSSQM2yVfF5sz7Sbe2
+        pjTqyVNDP01pBoUpR2BAB/JbeqaWM8jnnIi+35uE1kvttq97T3WfBHcW6j7RN5N8
+        HmsxDcG8GPV/6Z7j5ZGHACsQsI6bSbXdFACDOM4e74ECgYEA54I0Tut4NBlI0RkD
+        removed_to_invalidate_certs
+        v4ZWS2blGUguFGybgyaeJemqW+CdcBTzglsOXDi4C1NrLqgX3+c8PULsN0wns5B0
+        KoRU+oBrK/coPT1/J0cnLWqdfcMCgYEAwH4o7HIk8zour+7f1fNB7642dbndCQut
+        c+Kf48WDQpCOLCHvHujOY92XCVkEVP63lsc/JJCr9s8fxnUIX2z5/bwpKZn4f4Zy
+        fzwslzIWCLXAyPTHaux9u+8vtJRTPaQ0YYOigSn1xdLu5Xu/761jStQTs1i4MN3P
+        VI68gffWDlECgYEA4FhAAn6TRMF/3AmGqOGbJeibbaACp8FAe4x5qJhIz7Ekau0R
+        gRrAds6IgQ2O1w0dWTXmBsRdriOSxz/+4If5FibHOoHFDcvVw/lnZkwS5+g6CUR0
+        Wc2Nk/bu+yLCijsgr7ywlplEua2WB5+jwxPsGbjaoodnujjfAJwmLg/UQOsCgYAq
+        OAF1yps8FZjD0ZqabF4b2ZPsQjWulDcY4a274Ugmw1nLaC3wE5Og56sGy9VdZviR
+        Q2Yf+PMekNMhTe3mMBqsgiZtD24nWi+mpGYLS1r10hdUfAt48iGppI5MBvQy4t7y
+        PFLaDX/wQZFQF9JDGT5b3SPtBBpx7VRZ8Wx6/Qaf4QKBgDN7nX2YAt0t60kFzL2V
+        hdSuTbjdDTNYALHrPlOiUV0LXOWSpeJpjI7BbFYbwEXHWyJ6XJs/uS1pX9AfglXY
+        KNjEBaOzuTkyIX1THmpnt9417EVQeCYYbMvnKvzhVi32Enr5p8Y5t8i75lrfpvta
+        XxGBmgtsa++i6DvXUp/Jv1Xy
+        -----END PRIVATE KEY-----
+    links:
+      - service-a
+      - service-b
+      - service-c
+      - etcd
+
+  # NOTE: An instance of LB, that is intended for a few edge cases validations.
+  lb_no_health:
+    build: .
+    command: -log-level=debug
+    environment:
+      - KONTENA_SERVICE_NAME=lb_no_health
+      - ETCD_NODE=etcd
+
+  # NOTE: A 'service-a' instance of the test server
+  service-a:
+    build: test/server
+    container_name: service-a
+    hostname: service-a
+
+  # NOTE: A 'service-b' instance of the test server
+  service-b:
+    build: test/server
+    container_name: service-b
+    hostname: service-b
+
+  # NOTE: A 'service-c' instance of the test server
+  service-c:
+    build: test/server
+    container_name: service-c
+    hostname: service-c
+
+  # NOTE: An instance of the test helper, used to execute curl requests
+  lbe:
+    image: krates/toolbox:2.4.9-4
+    command: -c "./build/test.sh"
+    working_dir: /lbe
+    volumes:
+      - .:/lbe
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TRACE=${TRACE}
+      - ETCDCTL_ENDPOINTS=http://etcd:2379
+      - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
+    links:
+      - etcd
+      - lb:test-1
+      - lb:localhost
+      - lb_no_health

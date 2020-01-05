@@ -1,25 +1,19 @@
+language: minimal
 sudo: required
-language: ruby
 services:
   - docker
-rvm:
-  - 2.4.1
 env:
   global:
-    - DOCKER_USERNAME=kontenabot
-    - secure: "ggCnij9ZOhZ19tQRKKCo3RJGbtbBbqCHGzbfHJfJBKdzKtsqDAHrlz3VmajS2UALZ9TyXLTyM2Qt5nH0CO8VUaxSxOi53r1wFmg7RFGGTg2rdkQ/Vf/lXIQANzO9ICjTTGTArbE8KNy0Ri1Z0gvlDXYOBLtSaJHE1xTaKSGr54S4LjhNZox7R3frN8qcqHH37ygLlpe0dAZbdXeBls5e4/CeBdHrZNmwY9iRJiwDGYLHvC37QD9WEXY0vua8f1qU/95MuTGoRkbpoEDJJ/epFVEolcaYjtj7Y1Gf2+CG60WqjYmGSD9xrxwbVVj7JH+eTRqUb8NZYD9b7Lpe/m9P6JN/9FmqIHJ5XYenoKoPlyLbLXPkP+8bk8e9EBLwbROopR8+tqKxHmel6twajDhMd6MCxWApzsMfN9BntaLBKce0DuepdyIcgd8XGhZVqPxVUSXGjC8UmKafI9hTDIBsKGMyarJ5ZT4ZAF1o9Wx5aSte5jsgry0DGOOr9GFxgQobuHm8RsDt2osG4dDkeOC9XbPa/4whBPdTgHEBoIhakZAh/4vqWSa6L6a98ppSjpSmxz9LVk0+aVlmV8763oEvhGa3ibnYsYRGNDORAxbO+rOQowmvcIWq6yHaUBwWeeeGU7Y//Hq65QjY/ZPp6Z2kSE4+wSu/9nmuc88xdTIgGWI=" # for docker hub
-cache: bundler
-script:
-  - bundle exec rspec spec/
-  - ./prepare_test.sh && bats test/
+    - DOCKER_USERNAME=krates
+    - secure: j3y2btedN9EtaJOBm2e5o2I5MnxbDMK7qSrmDVPODonsK0PtALQ1vyaHa2m2HKyLOyFY2jabfVNC8+RHoZ8ObySCzY0SSMOmpzSqPMd+4CAjRW2QBZV2ZeZzuI2wo7fW4qrqxGZdmAWHWivwR4uaSZlcH7YblfX79fpw6Wht4NZ1RBp4agiofjN9aI3ZL9oPpyzGI6BzU7BCGwGlYqAZRQaOaM5BxfRPTk4jfTh6e5E/htEu3vkZ60ibCvsGfugJFYRe42srzdRvDCHR56ylLp5sLYz7scs2ASKFqd3I0VgIaCn6JJ/Nbz/gg6yZUaXJb0rhR8wWVK2ZrNzK7CTRqUbsrGiAvbRS+AHz57arz71fIEpuJXro5dGG64CZwgMDakE6OZwsEfx7Lxn2yDop8nA8HNKBCL9rsbgp3yUcVlFyjJ5YPAH4iu1iwrgKPNALE1S2OlTEWJCqrEs/o9qshOQ/QKXBo1Mk+pPBg338Z21HUqDtRgJ4Ht1RTts98BfmoOT3hHDJ7s2I+R4OWOwl6+tzjJ7haRxXmxyjx7WURtA6s+VsbA1kBWQGodBD8FmAaGYTnccc/wnNqr+XlmdlqpgKxt9SSaFYk//eXvt3ZWWY+ziX0LTcinecKJuOsD0avl8fxiBpyoz7KIedToSs03SwIbGCqiQM0kltYJ876Mc=
+script: make
 deploy:
   - provider: script
     script: ./build/edge.sh
     on:
       branch: master
-      rvm: 2.4.1
   - provider: script
     script: ./build/latest.sh
     on:
+      branch: master
       tags: true
-      rvm: 2.4.1
