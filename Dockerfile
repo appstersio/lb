@@ -13,7 +13,7 @@ RUN apk update && apk --update add bash tzdata ruby ruby-irb ruby-bigdecimal  \
 ADD Gemfile /app/
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base openssl-dev && \
-    gem install bundler --version ${BUNDLER_VERSION} && \
+    gem install bundler --no-ri --no-rdoc --version ${BUNDLER_VERSION} && \
     cd /app ; bundle install --without development test && \
     apk del build-dependencies
 
