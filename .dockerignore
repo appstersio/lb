@@ -3,3 +3,14 @@
 test/
 docker-compose.test.yml
 docker-compose.yml
+.bundle
+.dockerignore
+.dpl
+.gitignore
+.rspec
+.travis.yml
+Dockerfile*
+Makefile
+build/
+spec/
+*.md
