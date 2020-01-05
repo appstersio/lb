@@ -12,7 +12,7 @@ COMPOSE_PROJECT_NAME = krlb
 .PHONY: test
 
 test: wipe
-	@docker-compose run lbe
+	@docker-compose run -T lbe
 
 trace: export TRACE=1
 trace: test
