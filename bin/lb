@@ -3,7 +3,7 @@
 $stdout.sync = true
 require_relative '../lib/kontena_lb'
 
-puts "~~ Kontena LoadBalancer ~~\n\n"
+puts "~~ Krates LoadBalancer ~~\n\n"
 
 Kontena::CertManager.boot
 

@@ -1,8 +1,10 @@
-FROM haproxy:1.9.4-alpine
-MAINTAINER Kontena, Inc. <info@kontena.io>
+FROM haproxy:2.0.1-alpine
+LABEL maintainer="Pavel Tsurbeleu <krates@appsters.io>"
 
 ENV STATS_PASSWORD=secret \
-    PATH="/app/bin:${PATH}"
+    PATH="/app/bin:${PATH}" \
+    BUNDLER_VERSION=2.0.2 \
+    BUNDLE_JOBS=16
 
 RUN apk update && apk --update add bash tzdata ruby ruby-irb ruby-bigdecimal  \
     ruby-io-console ruby-json ruby-rake ca-certificates libssl1.1 openssl libstdc++ \
@@ -11,7 +13,7 @@ RUN apk update && apk --update add bash tzdata ruby ruby-irb ruby-bigdecimal  \
 ADD Gemfile /app/
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base openssl-dev && \
-    gem install bundler --no-ri --no-rdoc && \
+    gem install bundler --no-ri --no-rdoc --version ${BUNDLER_VERSION} && \
     cd /app ; bundle install --without development test && \
     apk del build-dependencies
 
