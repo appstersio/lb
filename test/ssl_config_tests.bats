@@ -8,7 +8,7 @@ load "common"
 }
 
 @test "loads certs from both SSL_CERTS" {
-  run docker-compose exec lb ls /etc/haproxy/certs
+  run docker-compose exec -T lb ls /etc/haproxy/certs
   assert_output_contains "cert1_gen.pem" 1
   assert_output_contains "SSL_CERT_test1.pem" 1
 }

@@ -15,7 +15,8 @@ test: wipe
 	@docker-compose run -T lbe
 
 trace: export TRACE=1
-trace: test
+trace: wipe
+	@docker-compose run lbe
 
 build:
 	@docker-compose build

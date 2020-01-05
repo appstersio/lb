@@ -1,7 +1,7 @@
 #!/bin/bash
 
 config() {
-	docker-compose exec lb cat /etc/haproxy/haproxy.cfg
+	docker-compose exec -T lb cat /etc/haproxy/haproxy.cfg
 }
 
 # Some assert helpers, inspired by Dokku: https://github.com/dokku/dokku/blob/master/tests/unit/test_helper.bash
