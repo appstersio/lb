@@ -3,8 +3,8 @@ listen http-in
     http-request replace-header Host (.*):.* \1
     <% if ssl? %>
     bind *:443 ssl crt /etc/haproxy/certs/ no-sslv3<% if accept_proxy? %> accept-proxy<% end %><% if http2? %> alpn h2,http/1.1<% end %>
-    http-request add-header X-Forwarded-Proto https if { ssl_fc }
-    http-request add-header X-Forwarded-Port 443 if { ssl_fc }
+    reqadd X-Forwarded-Proto:\ https if { ssl_fc }
+    reqadd X-Forwarded-Port:\ 443 if { ssl_fc }
     <% end %>
 
     errorfile 502 /etc/haproxy/errors/502.http
