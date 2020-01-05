@@ -16,6 +16,6 @@ then
 else
   # Integration testing is desired
   echo ":: BATS ::"
-  bats test/
+  bats --tap test/
   echo
 fi
