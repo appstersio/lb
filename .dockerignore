@@ -3,7 +3,7 @@
 test/
 docker-compose.test.yml
 docker-compose.yml
-.bundle
+.bundle/
 .dockerignore
 .dpl
 .gitignore
@@ -14,4 +14,4 @@ Makefile
 build/
 spec/
 *.md
-.git
+.git/
