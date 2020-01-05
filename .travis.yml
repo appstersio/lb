@@ -7,13 +7,13 @@ env:
     - DOCKER_USERNAME=krates
     - secure: j3y2btedN9EtaJOBm2e5o2I5MnxbDMK7qSrmDVPODonsK0PtALQ1vyaHa2m2HKyLOyFY2jabfVNC8+RHoZ8ObySCzY0SSMOmpzSqPMd+4CAjRW2QBZV2ZeZzuI2wo7fW4qrqxGZdmAWHWivwR4uaSZlcH7YblfX79fpw6Wht4NZ1RBp4agiofjN9aI3ZL9oPpyzGI6BzU7BCGwGlYqAZRQaOaM5BxfRPTk4jfTh6e5E/htEu3vkZ60ibCvsGfugJFYRe42srzdRvDCHR56ylLp5sLYz7scs2ASKFqd3I0VgIaCn6JJ/Nbz/gg6yZUaXJb0rhR8wWVK2ZrNzK7CTRqUbsrGiAvbRS+AHz57arz71fIEpuJXro5dGG64CZwgMDakE6OZwsEfx7Lxn2yDop8nA8HNKBCL9rsbgp3yUcVlFyjJ5YPAH4iu1iwrgKPNALE1S2OlTEWJCqrEs/o9qshOQ/QKXBo1Mk+pPBg338Z21HUqDtRgJ4Ht1RTts98BfmoOT3hHDJ7s2I+R4OWOwl6+tzjJ7haRxXmxyjx7WURtA6s+VsbA1kBWQGodBD8FmAaGYTnccc/wnNqr+XlmdlqpgKxt9SSaFYk//eXvt3ZWWY+ziX0LTcinecKJuOsD0avl8fxiBpyoz7KIedToSs03SwIbGCqiQM0kltYJ876Mc=
 script: make
-# deploy:
-#   - provider: script
-#     script: ./build/edge.sh
-#     on:
-#       branch: master
-#   - provider: script
-#     script: ./build/latest.sh
-#     on:
-#       tags: true
-#       rvm: 2.4.1
+deploy:
+  - provider: script
+    script: ./build/edge.sh
+    on:
+      branch: master
+  - provider: script
+    script: ./build/latest.sh
+    on:
+      branch: master
+      tags: true
