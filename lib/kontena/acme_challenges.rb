@@ -8,6 +8,9 @@ module Kontena
 
     # @return [Boolean]
     def self.configured?
+      # bypass any acme challenges configured when the switch is on
+      return false if env['ACME_OFF']
+      # by default acme challenges are configured via env vars
       env.any? { |env, value| env.start_with? 'ACME_CHALLENGE_' }
     end
 

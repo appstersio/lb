@@ -173,9 +173,23 @@ services:
   lb_no_health:
     build: .
     command: -log-level=debug
+    logging:
+      driver: "journald"
     environment:
       - KONTENA_SERVICE_NAME=lb_no_health
       - ETCD_NODE=etcd
+
+  lb_no_acme:
+    build: .
+    command: -log-level=debug
+    logging:
+      driver: "journald"
+    environment:
+      - KONTENA_SERVICE_NAME=lb_no_acme
+      - ACME_OFF=y
+      - ETCD_NODE=etcd
+      - ACME_CHALLENGE_LoqXcYV8q5ONbJQxbmR7SCTNo3tiAXDfowyjxAjEuX0=LoqXcYV8q5ONbJQxbmR7SCTNo3tiAXDfowyjxAjEuX0.9jg46WB3rR_AHD-EBXdN7cBkH1WOu0tA3M9fm21mqTI
+      - KONTENA_LB_HEALTH_URI=/health
 
   # NOTE: A 'service-a' instance of the test server
   service-a:
@@ -212,3 +226,4 @@ services:
       - lb:test-1
       - lb:localhost
       - lb_no_health
+      - lb_no_acme
