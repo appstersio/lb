@@ -21,7 +21,7 @@ setup() {
   etcdctl set /kontena/haproxy/lb_no_health/services/service-a/virtual_hosts www.foo.com
   sleep 1
   run curl -s http://lb_no_health/health/
-  [ $(expr "$output" : ".*503 — Service Unavailable.*") -ne 0 ]
+  [ $(expr "$output" : ".*503 .* Service Unavailable.*") -ne 0 ]
 }
 
 @test "supports health check uri setting for balanced service" {

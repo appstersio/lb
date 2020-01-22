@@ -29,3 +29,19 @@ assert_output_contains() {
   done
   assert_equal "$count" "$found"
 }
+
+refute_line() {
+  if [[ "$1" -ge 0 ]] 2>/dev/null; then
+    local num_lines="${#lines[@]}"
+    if [[ "$1" -lt "$num_lines" ]]; then
+      flunk "output has $num_lines lines"
+    fi
+  else
+    local line
+    for line in "${lines[@]}"; do
+      if [[ "$line" == "$1" ]]; then
+        flunk "expected to not find line \`$line'"
+      fi
+    done
+  fi
+}

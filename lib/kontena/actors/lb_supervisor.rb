@@ -43,10 +43,7 @@ module Kontena::Actors
     def start
       @syslog_server = SyslogServer.spawn!(name: 'syslog_server', supervise: true)
       @syslog_server << :start
-      @acme_challenge_server = AcmeChallengeServer.spawn!(name: 'acme_challenge_server', supervise: true, args: [
-          acme_challenges,
-      ])
-      @acme_challenge_server << :start
+      start_acme_challenge_server unless ENV['ACME_OFF']
 
       @config_generator = HaproxyConfigGenerator.spawn!(name: 'haproxy_config_generator', supervise: true)
       @config_writer = HaproxyConfigWriter.spawn!(name: 'haproxy_config_writer', supervise: true)
@@ -54,6 +51,13 @@ module Kontena::Actors
 
       @etcd_watcher = EtcdWatcher.spawn!(name: 'etcd_watcher', args: [etcd_node, etcd_path])
       @etcd_watcher << :start
+    end
+
+    def start_acme_challenge_server
+      @acme_challenge_server = AcmeChallengeServer.spawn!(name: 'acme_challenge_server', supervise: true, args: [
+          acme_challenges,
+      ])
+      @acme_challenge_server << :start
     end
 
     def generate_config(value)

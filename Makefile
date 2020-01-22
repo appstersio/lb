@@ -19,7 +19,7 @@ trace: wipe
 	@docker-compose run lbe
 
 build:
-	@docker-compose build
+	@docker-compose build --no-cache
 
 edge:
 	@docker build --no-cache -t krates/lb:edge .
